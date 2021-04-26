@@ -24,7 +24,8 @@ class PostTimingsApiTest {
     @Test
     fun whenPostTimingsAPIIsCalled_andContentTypeIsNotSetProperly_returnsHTTP415() {
         mockMvc.perform(post("/v1/timings/format")
-            .contentType(MediaType.APPLICATION_PDF))
+            .contentType(MediaType.APPLICATION_PDF)
+            .content(getSampleHTTP200Request()))
             .andExpect(status().isUnsupportedMediaType)
     }
 
@@ -37,10 +38,18 @@ class PostTimingsApiTest {
     }
 
     @Test
-    fun whenPostTimingsAPIIsCalled_andRequestBodyisValid_returnsHTTP200() {
+    fun whenPostTimingsAPIIsCalled_andRequestBodyIsInvalid_returnsHTTP422() {
         mockMvc.perform(post("/v1/timings/format")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(getSampleRequest()))
+            .content(getSampleHTTP422Request()))
+            .andExpect(status().isUnprocessableEntity)
+    }
+
+    @Test
+    fun whenPostTimingsAPIIsCalled_andRequestBodyIsValid_returnsHTTP200() {
+        mockMvc.perform(post("/v1/timings/format")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(getSampleHTTP200Request()))
             .andExpect(status().isOk)
     }
 }

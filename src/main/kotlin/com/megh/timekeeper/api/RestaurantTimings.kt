@@ -1,13 +1,13 @@
 package com.megh.timekeeper.api
 
 class RestaurantTimings(
-    val sunday: List<OpenCloseTimings> = emptyList(),
-    val monday: List<OpenCloseTimings> = emptyList(),
-    val tuesday: List<OpenCloseTimings> = emptyList(),
-    val wednesday: List<OpenCloseTimings> = emptyList(),
-    val thursday: List<OpenCloseTimings> = emptyList(),
-    val friday: List<OpenCloseTimings> = emptyList(),
-    val saturday: List<OpenCloseTimings> = emptyList(),
+    val sunday: List<OpenCloseTimings>,
+    val monday: List<OpenCloseTimings>,
+    val tuesday: List<OpenCloseTimings>,
+    val wednesday: List<OpenCloseTimings>,
+    val thursday: List<OpenCloseTimings>,
+    val friday: List<OpenCloseTimings>,
+    val saturday: List<OpenCloseTimings>,
 )
 
 data class OpenCloseTimings(val type: RestaurantStatus, val timing: Int)
