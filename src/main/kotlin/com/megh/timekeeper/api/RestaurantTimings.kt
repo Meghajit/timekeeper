@@ -13,5 +13,5 @@ data class RestaurantTimings(
 data class OpenCloseTimings(val type: RestaurantStatus, val value: Int)
 
 enum class RestaurantStatus {
-    OPEN, CLOSE
+    open, close
 }

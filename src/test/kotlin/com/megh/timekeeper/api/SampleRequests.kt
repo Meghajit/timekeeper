@@ -3,13 +3,13 @@ package com.megh.timekeeper.api
 fun getSampleHTTP200Request(): String {
     return """
         {
-        "monday" : [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "tuesday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "wednesday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "thursday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "friday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "saturday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}]
+        "monday" : [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
+        "tuesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
+        "wednesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
+        "thursday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
+        "friday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
+        "saturday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
+        "sunday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}]
        }
     """.trimIndent()
 }
@@ -17,10 +17,10 @@ fun getSampleHTTP200Request(): String {
 fun getSampleMissingDaysOfWeekRequest(): String {
     return """
         {
-        "monday" : [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "timbektu" : [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "tuesday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}]
+        "monday" : [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "timbektu" : [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "tuesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "sunday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}]
        }
     """.trimIndent()
 }
@@ -29,12 +29,12 @@ fun getSampleNullOpeningHoursRequest(): String {
     return """
         {
         "monday" : null,
-        "tuesday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "wednesday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "thursday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "friday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "saturday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}],
-        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 64800}]
+        "tuesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "wednesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "thursday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "friday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "saturday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}],
+        "sunday": [{"type":"open", "value":1200},{"type" : "close", "value" : 64800}]
        }
     """.trimIndent()
 }
@@ -42,7 +42,7 @@ fun getSampleNullOpeningHoursRequest(): String {
 fun getSampleAtLeastOneNonEmptyOpeningHoursRequest(): String {
     return """
         {
-        "monday" : [{"type":"OPEN", "value":2343},{"type" : "CLOSE", "value" : 4500}],
+        "monday" : [{"type":"open", "value":2343},{"type" : "close", "value" : 4500}],
         "tuesday": [],
         "wednesday": [],
         "thursday": [],
@@ -74,8 +74,8 @@ fun getSampleInvalidOpeningHoursRequest(): String {
         "tuesday": [],
         "wednesday": [],
         "thursday": [],
-        "friday": [{"type":"OPEN", "value":-45},{"type" : "CLOSE", "value" : 64800}],
-        "saturday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 86400}],
+        "friday": [{"type":"open", "value":-45},{"type" : "close", "value" : 64800}],
+        "saturday": [{"type":"open", "value":1200},{"type" : "close", "value" : 86400}],
         "sunday": []
        }
     """.trimIndent()
@@ -88,8 +88,8 @@ fun getSampleUnParsableOpeningHoursRequest(): String {
         "tuesday": [],
         "wednesday": [],
         "thursday": [],
-        "saturday": [{"type":"OPEN", "value":"hello"},{"type" : "CLOSE", "value" : "this should have been an integer !"}],
-        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}]
+        "saturday": [{"type":"open", "value":"hello"},{"type" : "close", "value" : "this should have been an integer !"}],
+        "sunday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}]
        }
     """.trimIndent()
 }
@@ -101,8 +101,8 @@ fun getSampleUnParsableOpeningHoursTypeRequest(): String {
         "tuesday": [],
         "wednesday": [],
         "thursday": [],
-        "saturday": [{"type":"THIS IS NOT A VALID TYPE", "value":1200},{"type" : "CLOSE", "value" : 8000}],
-        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}]
+        "saturday": [{"type":"THIS IS NOT A VALID TYPE", "value":1200},{"type" : "close", "value" : 8000}],
+        "sunday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}]
        }
     """.trimIndent()
 }
