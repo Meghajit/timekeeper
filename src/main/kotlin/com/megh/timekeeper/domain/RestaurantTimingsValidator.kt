@@ -1,6 +1,8 @@
 package com.megh.timekeeper.domain
 
 import com.megh.timekeeper.api.OpenCloseTimings
+import com.megh.timekeeper.api.RestaurantStatus.close
+import com.megh.timekeeper.api.RestaurantStatus.open
 import com.megh.timekeeper.api.RestaurantTimings
 import org.springframework.stereotype.Component
 import javax.xml.bind.ValidationException
@@ -18,6 +20,25 @@ class RestaurantTimingsValidator {
     fun validate(restaurantTimings: RestaurantTimings) {
         validateTimingsForAllDaysAreNotEmpty(restaurantTimings)
         validateTimingsAreWithinLimits(restaurantTimings)
+        validateTimingsAreInPairs(restaurantTimings)
+    }
+
+    @Throws
+    private fun validateTimingsAreInPairs(restaurantTimings: RestaurantTimings) {
+        var openStatusCount = 0
+        var closeStatusCount = 0
+        restaurantTimings.getAllDaysData().forEach { openCloseTimingsForDay ->
+            openCloseTimingsForDay.forEach { openCloseTimings ->
+                when (openCloseTimings.type) {
+                    open -> openStatusCount++
+                    close -> closeStatusCount++
+                }
+            }
+        }
+
+        if(openStatusCount!=closeStatusCount) {
+            throw ValidationException("TIMEKEEPER_VALIDATION_EXCEPTION_OPENING_HOURS_NOT_COMPLEMENTARY")
+        }
     }
 
     @Throws(ValidationException::class)
