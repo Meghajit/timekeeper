@@ -52,3 +52,17 @@ fun getSampleAtLeastOneNonEmptyOpeningHoursRequest(): String {
        }
     """.trimIndent()
 }
+
+fun getSampleAllEmptyOpeningHoursRequest(): String {
+    return """
+        {
+        "monday" : [],
+        "tuesday": [],
+        "wednesday": [],
+        "thursday": [],
+        "friday": [],
+        "saturday": [],
+        "sunday": []
+       }
+    """.trimIndent()
+}

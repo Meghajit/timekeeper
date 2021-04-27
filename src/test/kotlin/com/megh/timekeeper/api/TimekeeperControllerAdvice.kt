@@ -7,9 +7,17 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import javax.xml.bind.ValidationException
 
 @RestControllerAdvice
 class TimekeeperControllerAdvice {
+
+    /** This method handles exceptions due to validation failures **/
+    @ExceptionHandler(value = [ValidationException::class])
+    fun handleValidationException(ex: ValidationException): ResponseEntity<HttpStatus> {
+        return ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
 
     /** This method handles exceptions due to invalid request **/
     @ExceptionHandler(value = [HttpMessageNotReadableException::class, HttpMediaTypeNotSupportedException::class])
