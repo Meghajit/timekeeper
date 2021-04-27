@@ -1,25 +1,20 @@
 package com.megh.timekeeper.api
 
-import com.megh.timekeeper.domain.RestaurantTimingsValidator
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.mockito.Mockito.`when`
-import javax.xml.bind.ValidationException
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 
-@WebMvcTest
-class PostTimingsApiTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+class PostTimingsApiTest() {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
-
-    @MockBean
-    private lateinit var restaurantTimingsValidator: RestaurantTimingsValidator
 
     @Test
     fun whenPostTimingsAPIIsCalled_andRequestBodyIsEmpty_returnsHTTP400() {
@@ -70,11 +65,17 @@ class PostTimingsApiTest {
 
     @Test
     fun whenPostTimingsAPIIsCalled_andRequestHasAllEmptyOpeningHours_returnsHTTP422() {
-        `when`(restaurantTimingsValidator.validate(RestaurantTimings())).thenThrow(ValidationException("validation error"))
-
         mockMvc.perform(post("/v1/timings/format")
             .contentType(MediaType.APPLICATION_JSON)
             .content(getSampleAllEmptyOpeningHoursRequest()))
+            .andExpect(status().isUnprocessableEntity)
+    }
+
+    @Test
+    fun whenPostTimingsAPIIsCalled_andRequestBodyHasInvalidOpeningHours_returnsHTTP422() {
+        mockMvc.perform(post("/v1/timings/format")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(getSampleInvalidOpeningHoursRequest()))
             .andExpect(status().isUnprocessableEntity)
     }
 
