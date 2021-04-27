@@ -80,3 +80,29 @@ fun getSampleInvalidOpeningHoursRequest(): String {
        }
     """.trimIndent()
 }
+
+fun getSampleUnParsableOpeningHoursRequest(): String {
+    return """
+        {
+        "monday" : [],
+        "tuesday": [],
+        "wednesday": [],
+        "thursday": [],
+        "saturday": [{"type":"OPEN", "value":"hello"},{"type" : "CLOSE", "value" : "this should have been an integer !"}],
+        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}]
+       }
+    """.trimIndent()
+}
+
+fun getSampleUnParsableOpeningHoursTypeRequest(): String {
+    return """
+        {
+        "monday" : [],
+        "tuesday": [],
+        "wednesday": [],
+        "thursday": [],
+        "saturday": [{"type":"THIS IS NOT A VALID TYPE", "value":1200},{"type" : "CLOSE", "value" : 8000}],
+        "sunday": [{"type":"OPEN", "value":1200},{"type" : "CLOSE", "value" : 8000}]
+       }
+    """.trimIndent()
+}
