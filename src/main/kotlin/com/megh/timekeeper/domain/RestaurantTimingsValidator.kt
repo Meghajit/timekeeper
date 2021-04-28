@@ -5,6 +5,7 @@ import com.megh.timekeeper.api.RestaurantStatus.close
 import com.megh.timekeeper.api.RestaurantStatus.open
 import com.megh.timekeeper.api.RestaurantTimings
 import org.springframework.stereotype.Component
+import java.time.DayOfWeek
 import javax.xml.bind.ValidationException
 import kotlin.jvm.Throws
 
@@ -14,6 +15,25 @@ class RestaurantTimingsValidator {
         private fun checkIfInvalidTimings(timings: List<OpenCloseTimings>): Boolean {
             return !(timings.isEmpty() || timings.all { it.value in 0..86399 })
         }
+
+        private fun checkIfInvalidChronologicalOrderOfSameDayOpenAndCloseTimings(timings: List<OpenCloseTimings>): Boolean {
+            if (timings.isEmpty()) {
+                return false
+            } else {
+                val openTimings = timings.filter { it.type == open }
+                val closeTimings = timings.filter { it.type == close }
+                if (openTimings.size != closeTimings.size) {
+                    return true
+                } else {
+                    openTimings.forEach { openingTime ->
+                        if (closeTimings.none { it.value > openingTime.value }) {
+                            return true
+                        }
+                    }
+                    return false
+                }
+            }
+        }
     }
 
     @Throws(ValidationException::class)
@@ -21,6 +41,19 @@ class RestaurantTimingsValidator {
         validateTimingsForAllDaysAreNotEmpty(restaurantTimings)
         validateTimingsAreWithinLimits(restaurantTimings)
         validateTimingsAreInPairs(restaurantTimings)
+        validateOpenAndCloseTimingsAreOnSameDayOrNextDay(restaurantTimings)
+    }
+
+    @Throws(ValidationException::class)
+    private fun validateOpenAndCloseTimingsAreOnSameDayOrNextDay(restaurantTimings: RestaurantTimings) {
+        val dayMap = restaurantTimings.getAllDaysData()
+        dayMap.forEach { (day, openCloseTimings) ->
+            if (openCloseTimings.isNotEmpty()) {
+                if (checkIfInvalidChronologicalOrderOfSameDayOpenAndCloseTimings(openCloseTimings)) {
+                    throw ValidationException("TIMEKEEPER_VALIDATION_EXCEPTION_INVALID_CHRONOLOGICAL_ORDER_OF_OPENING_HOURS")
+                }
+            }
+        }
     }
 
     @Throws
@@ -28,7 +61,7 @@ class RestaurantTimingsValidator {
         var openStatusCount = 0
         var closeStatusCount = 0
         restaurantTimings.getAllDaysData().forEach { openCloseTimingsForDay ->
-            openCloseTimingsForDay.forEach { openCloseTimings ->
+            openCloseTimingsForDay.value.forEach { openCloseTimings ->
                 when (openCloseTimings.type) {
                     open -> openStatusCount++
                     close -> closeStatusCount++
@@ -36,7 +69,7 @@ class RestaurantTimingsValidator {
             }
         }
 
-        if(openStatusCount!=closeStatusCount) {
+        if (openStatusCount != closeStatusCount) {
             throw ValidationException("TIMEKEEPER_VALIDATION_EXCEPTION_OPENING_HOURS_NOT_COMPLEMENTARY")
         }
     }

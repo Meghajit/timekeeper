@@ -122,3 +122,17 @@ fun getSampleNotPairedOpeningHoursRequest(): String {
        }
     """.trimIndent()
 }
+
+fun getSampleIncorrectChronologicalOrderOfOpenAndCloseTimingsOnSameDayRequest(): String {
+    return """
+        {
+        "monday" : [{"type" : "close", "value" : 64800}, {"type" : "open", "value" : 1200}],
+        "tuesday": [{"type":"open", "value":7000},{"type":"close", "value":2200}],
+        "wednesday": [],
+        "thursday": [],
+        "friday": [],        
+        "saturday": [],
+        "sunday": []
+       }
+    """.trimIndent()
+}
