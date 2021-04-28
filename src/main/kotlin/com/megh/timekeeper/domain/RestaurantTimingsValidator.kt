@@ -16,22 +16,23 @@ class RestaurantTimingsValidator {
             return !(timings.isEmpty() || timings.all { it.value in 0..86399 })
         }
 
-        private fun checkIfInvalidChronologicalOrderOfSameDayOpenAndCloseTimings(timings: List<OpenCloseTimings>): Boolean {
-            if (timings.isEmpty()) {
+        private fun checkIfInvalidChronologicalOrderOfNextDayCloseTimings(
+            currentDayTimings: List<OpenCloseTimings>, nextDayTimings: List<OpenCloseTimings>
+        ): Boolean {
+            val currentDayOpenTimings = currentDayTimings.filter { it.type == open }
+            val currentDayCloseTimings = currentDayTimings.filter { it.type == close }
+            val nextDayFirstStatus = nextDayTimings.minByOrNull { it.value }?.type
+
+            if (currentDayTimings.isEmpty()) {
                 return false
-            } else {
-                val openTimings = timings.filter { it.type == open }
-                val closeTimings = timings.filter { it.type == close }
-                if (openTimings.size != closeTimings.size) {
-                    return true
-                } else {
-                    openTimings.forEach { openingTime ->
-                        if (closeTimings.none { it.value > openingTime.value }) {
-                            return true
-                        }
+            }
+            else {
+                currentDayOpenTimings.forEach { openingTime ->
+                    if (currentDayCloseTimings.none { it.value > openingTime.value } && nextDayFirstStatus != close) {
+                        return true
                     }
-                    return false
                 }
+                return false
             }
         }
     }
@@ -49,7 +50,9 @@ class RestaurantTimingsValidator {
         val dayMap = restaurantTimings.getAllDaysData()
         dayMap.forEach { (day, openCloseTimings) ->
             if (openCloseTimings.isNotEmpty()) {
-                if (checkIfInvalidChronologicalOrderOfSameDayOpenAndCloseTimings(openCloseTimings)) {
+                val nextDay: DayOfWeek = day + 1
+                val timingsForNextDay = dayMap[nextDay]!!
+                if (checkIfInvalidChronologicalOrderOfNextDayCloseTimings(openCloseTimings, timingsForNextDay)) {
                     throw ValidationException("TIMEKEEPER_VALIDATION_EXCEPTION_INVALID_CHRONOLOGICAL_ORDER_OF_OPENING_HOURS")
                 }
             }

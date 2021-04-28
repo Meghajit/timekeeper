@@ -136,6 +136,16 @@ class PostTimingsApiTest {
     }
 
     @Test
+    fun whenPostTimingsAPIIsCalled_andRequestBodyHasIncorrectChronologicalOrderOfNextDayCloseTimings_returns422() {
+        mockMvc.perform(
+            post("/v1/timings/format")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(getSampleIncorrectChronologicalOrderOfCloseTimingsOnNextDayRequest())
+        )
+            .andExpect(status().isUnprocessableEntity)
+    }
+
+    @Test
     fun whenPostTimingsAPIIsCalled_andRequestBodyIsValid_returnsHTTP200() {
         mockMvc.perform(
             post("/v1/timings/format")

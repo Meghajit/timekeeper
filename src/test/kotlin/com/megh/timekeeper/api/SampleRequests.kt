@@ -3,13 +3,13 @@ package com.megh.timekeeper.api
 fun getSampleHTTP200Request(): String {
     return """
         {
-        "monday" : [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
-        "tuesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
-        "wednesday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
-        "thursday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
-        "friday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
-        "saturday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}],
-        "sunday": [{"type":"open", "value":1200},{"type" : "close", "value" : 8000}]
+        "monday" : [{"type" : "open", "value" : 1200}, {"type" : "close", "value" : 8000}, {"type" : "open", "value" : 80000}],
+        "tuesday": [{"type":"close", "value":1200}, {"type":"open", "value":6000},{"type":"close", "value":12000}],
+        "wednesday": [],
+        "thursday": [],
+        "friday": [{"type" : "open", "value" : 1200}],        
+        "saturday": [{"type" : "close", "value" : 8000}],
+        "sunday": []
        }
     """.trimIndent()
 }
@@ -133,6 +133,20 @@ fun getSampleIncorrectChronologicalOrderOfOpenAndCloseTimingsOnSameDayRequest():
         "friday": [],        
         "saturday": [],
         "sunday": []
+       }
+    """.trimIndent()
+}
+
+fun getSampleIncorrectChronologicalOrderOfCloseTimingsOnNextDayRequest(): String {
+    return """
+        {
+        "monday" : [{"type" : "open", "value" : 1200}, {"type" : "close", "value" : 8000}, {"type" : "open", "value" : 80000}],
+        "tuesday": [{"type":"close", "value":1200}, {"type":"open", "value":6000},{"type":"close", "value":12000}],
+        "wednesday": [],
+        "thursday": [],
+        "friday": [{"type" : "open", "value" : 1200}],        
+        "saturday": [],
+        "sunday": [{"type" : "close", "value" : 8000}]
        }
     """.trimIndent()
 }
