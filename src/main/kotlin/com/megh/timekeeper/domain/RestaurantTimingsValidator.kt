@@ -25,8 +25,7 @@ class RestaurantTimingsValidator {
 
             if (currentDayTimings.isEmpty()) {
                 return false
-            }
-            else {
+            } else {
                 currentDayOpenTimings.forEach { openingTime ->
                     if (currentDayCloseTimings.none { it.value > openingTime.value } && nextDayFirstStatus != close) {
                         return true
@@ -64,14 +63,9 @@ class RestaurantTimingsValidator {
         var openStatusCount = 0
         var closeStatusCount = 0
         restaurantTimings.getAllDaysData().forEach { openCloseTimingsForDay ->
-            openCloseTimingsForDay.value.forEach { openCloseTimings ->
-                when (openCloseTimings.type) {
-                    open -> openStatusCount++
-                    close -> closeStatusCount++
-                }
-            }
+            openStatusCount += openCloseTimingsForDay.value.filter { it.type == open }.size
+            closeStatusCount += openCloseTimingsForDay.value.filter { it.type == close }.size
         }
-
         if (openStatusCount != closeStatusCount) {
             throw ValidationException("TIMEKEEPER_VALIDATION_EXCEPTION_OPENING_HOURS_NOT_COMPLEMENTARY")
         }
