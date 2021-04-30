@@ -15,9 +15,9 @@ class TimekeeperControllerAdvice {
     fun handleValidationException(ex: ValidationException): ResponseEntity<Any> {
         return ResponseEntity(object {
             val timestamp = LocalDateTime.now()
-            val status = HttpStatus.UNPROCESSABLE_ENTITY
-            val error = "Bad Request"
+            val status = HttpStatus.UNPROCESSABLE_ENTITY.value()
+            val error = HttpStatus.UNPROCESSABLE_ENTITY
             val message = ex.message
-        }, HttpStatus.BAD_REQUEST)
+        }, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 }
