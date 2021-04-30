@@ -11,31 +11,6 @@ import kotlin.jvm.Throws
 
 @Component
 class RestaurantTimingsValidator {
-    companion object {
-        private fun checkIfInvalidTimings(timings: List<OpenCloseTimings>): Boolean {
-            return !(timings.isEmpty() || timings.all { it.value in 0..86399 })
-        }
-
-        private fun checkIfInvalidChronologicalOrderOfNextDayCloseTimings(
-            currentDayTimings: List<OpenCloseTimings>, nextDayTimings: List<OpenCloseTimings>
-        ): Boolean {
-            val currentDayOpenTimings = currentDayTimings.filter { it.type == open }
-            val currentDayCloseTimings = currentDayTimings.filter { it.type == close }
-            val nextDayFirstStatus = nextDayTimings.minByOrNull { it.value }?.type
-
-            if (currentDayTimings.isEmpty()) {
-                return false
-            } else {
-                currentDayOpenTimings.forEach { openingTime ->
-                    if (currentDayCloseTimings.none { it.value > openingTime.value } && nextDayFirstStatus != close) {
-                        return true
-                    }
-                }
-                return false
-            }
-        }
-    }
-
     @Throws(ValidationException::class)
     fun validate(restaurantTimings: RestaurantTimings) {
         validateTimingsForAllDaysAreNotEmpty(restaurantTimings)
@@ -96,6 +71,29 @@ class RestaurantTimingsValidator {
             restaurantTimings.saturday.isEmpty()
         ) {
             throw ValidationException("TIMEKEEPER_VALIDATION_EXCEPTION_ALL_DAYS_TIMINGS_EMPTY")
+        }
+    }
+
+    private fun checkIfInvalidTimings(timings: List<OpenCloseTimings>): Boolean {
+        return !(timings.isEmpty() || timings.all { it.value in 0..86399 })
+    }
+
+    private fun checkIfInvalidChronologicalOrderOfNextDayCloseTimings(
+        currentDayTimings: List<OpenCloseTimings>, nextDayTimings: List<OpenCloseTimings>
+    ): Boolean {
+        val currentDayOpenTimings = currentDayTimings.filter { it.type == open }
+        val currentDayCloseTimings = currentDayTimings.filter { it.type == close }
+        val nextDayFirstStatus = nextDayTimings.minByOrNull { it.value }?.type
+
+        if (currentDayTimings.isEmpty()) {
+            return false
+        } else {
+            currentDayOpenTimings.forEach { openingTime ->
+                if (currentDayCloseTimings.none { it.value > openingTime.value } && nextDayFirstStatus != close) {
+                    return true
+                }
+            }
+            return false
         }
     }
 }
