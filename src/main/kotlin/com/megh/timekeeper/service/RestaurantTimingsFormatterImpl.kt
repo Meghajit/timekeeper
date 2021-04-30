@@ -9,6 +9,17 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
+/** This class implements RestaurantTimingsFormatter and formats the restaurant timings into a human readable version
+ * using 12-hour clock.
+ * The format function iterates over the days of the week. For each day, it checks if there are any timings. If not,
+ * it skips the day.
+ * If timings are present for the day, it iterates over the timings of the day with type as
+ * `open` and tries to find a complementary closing time for it.
+ * For finding the closing time, it first checks if a closing time exists on the same day at a time after
+ * the opening time. If not, it takes the first event of the next day as the closing time since the data is
+ * already supposed to be validated at an upper layer.
+ * The opening closing time is then eventually formatted using a helper function. **/
+
 @Service
 class RestaurantTimingsFormatterImpl : RestaurantTimingsFormatter {
 
