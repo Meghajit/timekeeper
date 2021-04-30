@@ -11,20 +11,24 @@ import kotlin.collections.ArrayList
 
 @Service
 class RestaurantTimingsFormatterImpl : RestaurantTimingsFormatter {
+
     override fun format(restaurantTimings: RestaurantTimings): Any {
         val allDaysData = restaurantTimings.getAllDaysData()
         val formattedRestaurantTimings = FormattedRestaurantTimings()
+
         allDaysData.forEach { (dayOfTheWeek, timingsForDay) ->
             val openingTimesForDay = timingsForDay.filter { it.type == open }
+
             if (openingTimesForDay.isNotEmpty()) {
                 val closingTimesForDay = timingsForDay.filter { it.type == close }
                 val formattedTimingsForDay = ArrayList<String>()
                 openingTimesForDay.forEach { openingTime ->
+
                     val closingTime = closingTimesForDay.find { it.value > openingTime.value }?.value
                         ?: allDaysData[dayOfTheWeek + 1]?.minByOrNull { it.value }?.value
-
                     formattedTimingsForDay.add(constructFormattedOpenHours(openingTime.value, closingTime!!))
                 }
+
                 formattedRestaurantTimings.setTimingFromDayOfWeek(
                     dayOfTheWeek,
                     formattedTimingsForDay.joinToString(", ")
