@@ -11,14 +11,14 @@ curl --location --request POST 'localhost:8080/v1/timings/format' --header 'Cont
 ```  
 **Response**
 ```json  
-{  
-  "Monday": "12:20 AM - 2:13 AM, 10:13 PM - 12:20 AM",  
-  "Tuesday": "1:40 AM - 3:20 AM",  
-  "Wednesday": "Closed",  
-  "Thursday": "Closed",  
-  "Friday": "12:20 AM - 2:13 AM",  
-  "Saturday": "Closed",  
-  "Sunday": "Closed"  
+{
+    "Monday": "Closed",
+    "Tuesday": "10 AM - 6 PM",
+    "Wednesday": "Closed",
+    "Thursday": "10 AM - 6 PM",
+    "Friday": "10 AM - 1 AM",
+    "Saturday": "10 AM - 1 AM",
+    "Sunday": "12 PM - 9 PM"
 }  
 ```  
 ## Steps
