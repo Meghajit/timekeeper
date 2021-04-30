@@ -56,24 +56,24 @@ class PostTimingsApiTest {
     }
 
     @Test
-    fun whenPostTimingsAPIIsCalled_andRequestHasMissingDaysOfWeek_returnsHTTP422() {
+    fun whenPostTimingsAPIIsCalled_andRequestHasMissingDaysOfWeek_returnsHTTP400() {
         mockMvc.perform(
             post("/v1/timings/format")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getSampleMissingDaysOfWeekRequest())
         )
-            .andExpect(status().isUnprocessableEntity)
+            .andExpect(status().isBadRequest)
         verifyNoInteractions(restaurantTimingsFormatter)
     }
 
     @Test
-    fun whenPostTimingsAPIIsCalled_andRequestHasAtLeastOneDayWithNullOpeningHours_returnsHTTP422() {
+    fun whenPostTimingsAPIIsCalled_andRequestHasAtLeastOneDayWithNullOpeningHours_returnsHTTP400() {
         mockMvc.perform(
             post("/v1/timings/format")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getSampleNullOpeningHoursRequest())
         )
-            .andExpect(status().isUnprocessableEntity)
+            .andExpect(status().isBadRequest)
         verifyNoInteractions(restaurantTimingsFormatter)
     }
 
