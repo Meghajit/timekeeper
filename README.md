@@ -81,7 +81,7 @@ curl --location --request POST 'localhost:8080/v1/timings/format' --header 'Cont
 
 2. **TIMEKEEPER_VALIDATION_EXCEPTION_TIMINGS_OUT_OF_RANGE**
 
-This validation checks whether the restaurant timings provided in the request are valid, i:e, they are non-negative and within the range (0 to 86399).
+This validation checks whether the restaurant timings provided in the request are valid UNIX time, i:e, they are non-negative and within the range (0 to 86399).
 
 **Sample cURL request**
 ```bash  
