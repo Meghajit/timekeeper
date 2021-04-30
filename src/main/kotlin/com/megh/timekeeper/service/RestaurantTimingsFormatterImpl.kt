@@ -23,7 +23,7 @@ import kotlin.collections.ArrayList
 @Service
 class RestaurantTimingsFormatterImpl : RestaurantTimingsFormatter {
 
-    override fun format(restaurantTimings: RestaurantTimings): Any {
+    override fun format(restaurantTimings: RestaurantTimings): FormattedRestaurantTimings {
         val allDaysData = restaurantTimings.getAllDaysData()
         val formattedRestaurantTimings = FormattedRestaurantTimings()
 
