@@ -18,7 +18,7 @@ Consider, this is the initial data we have
     {
         "monday": [],
         "tuesday": [{"type": "open","value": "3600"},{"type": "close","value": "18000"}, {"type": "open","value": "40000"},{"type": "close","value": "80000"}],
-        "wednesday": [{"type": "open","value": "1800"},{"type": "close","value": "18000"}, {"type": "open","value": "30000"},{"type": "close","value": "80000"}],
+        "wednesday": [{"type": "open","value": "3600"},{"type": "close","value": "18000"}, {"type": "open","value": "40000"},{"type": "close","value": "80000"}],
         "thursday": [{"type": "open","value": "64800"}],
         "friday": [{"type": "close","value": "36000"}],
         "saturday": [],
@@ -34,7 +34,7 @@ Consider, this is the initial data we have
     ```json
        {
         "tuesday": [{"type": "open","value": "3600"},{"type": "close","value": "18000"}, {"type": "open","value": "40000"},{"type": "close","value": "80000"}],
-        "wednesday": [{"type": "open","value": "1800"},{"type": "close","value": "18000"}, {"type": "open","value": "30000"},{"type": "close","value": "80000"}],
+        "wednesday": [{"type": "open","value": "3600"},{"type": "close","value": "18000"}, {"type": "open","value": "40000"},{"type": "close","value": "80000"}],
         "thursday": [{"type": "open","value": "64800"}],
         "friday": [{"type": "close","value": "36000"}]
         }
@@ -53,7 +53,7 @@ Consider, this is the initial data we have
     ```json
      {
         "tuesday": [{"opening-time": "3600", "duration": "14400"}, {"opening-time": "40000", "duration": "40000"}],
-        "wednesday": [{"opening-time": "1800", "duration": "16200"}, {"opening-time": "30000", "duration": "50000"}],
+        "wednesday": [{"opening-time": "3600", "duration": "14400"}, {"opening-time": "40000", "duration": "40000"}],
         "thursday": [{"opening-time": "64800", "duration": "57600"}]
       }
     ```
@@ -63,8 +63,27 @@ Consider, this is the initial data we have
   by the initial data.  
   
 ### Optimization 3: Ease of parsing and reduce duplication
-- While writing the Timekeeper service, I had to write a good amount of code in order to convert the request into an 
-  iterable form. The reason for this is that the input JSON has days of the week as top level keys which makes it 
+- While writing the Timekeeper service, I had to write a good amount of code in order to convert the request into an
+  iterable form. The reason for this is that the input JSON has days of the week as top level keys which makes it
   difficult to walk through the keys, unless we do some messy stuff using Reflection and casting to a `DayOfWeek` enum.  
     
+  In order to ease the parsing logic and applying of validation checks by Timekeeper, the input JSON can be changed to
+  a format like this:-
+  ```json
+     {"data": [{
+                "day": "tuesday",
+                "opening-hours": [{"opening-time": "3600", "duration": "14400"}, {"opening-time": "40000", "duration": "40000"}]
+              },
+              {
+                "day": "wednesday",
+                "opening-hours": [{"opening-time": "3600", "duration": "14400"}, {"opening-time": "40000", "duration": "40000"}]
+              },
+              {
+               "day": "thursday",
+               "opening-hours": [{"opening-time": "64800", "duration": "57600"}]
+            }]
+      }
+  ```
   
+  Since, the input JSON has just one key `data` with an array as its value, Timekeeper can now easily iterate through the 
+  array, apply the business validations and other pre-processing steps and format the data much faster.
