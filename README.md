@@ -1,7 +1,8 @@
 
 # Timekeeper
 
-Timekeeper is a simple REST API which accepts opening hours data as an input (JSON) and returns a more human readable version of the data formatted using 12-hour clock.
+Timekeeper is a simple REST API which accepts restaurant opening hours' data as an input (JSON) and returns a more 
+human-readable version of the data formatted using 12-hour clock.
 
 There is just one POST endpoint: `/v1/timings/format`
 
