@@ -1,4 +1,4 @@
-#Optimizations
+# Optimizations
 Before we go ahead and discuss any alternative data format to save the restaurant opening hours, we should try to
 pinpoint a few assumptions. These decisions will affect the schema.
 
