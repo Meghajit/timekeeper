@@ -1,19 +1,20 @@
 #Optimizations
 Before we go ahead and discuss any alternative data format to save the restaurant opening hours, we should try to
-pinpoint a few decision points.These points will affect the schema.
+pinpoint a few assumptions. These decisions will affect the schema.
 
 I'll use the term "system" to refer to the server/application which will store the restaurant opening hours. This
 system can either be a simple MS Excel file with different sheets storing the opening hours of different restaurants, OR
-it can be a full blown web application which saves the opening hours for each restaurant in some kind of persistent
+it can be a full-blown web application which saves the opening hours for each restaurant in some kind of persistent
 storage like Postgres DB.
 
-## Will the system be read heavy or write heavy ?
-Consider the system is read heavy. The restaurant will update its opening hours less frequently, maybe once
-in a week. However, the data will be read quite frequently by some other system.
-Hence, the response time should be minimal. We would ideally like to reduce the data size so that network calls
-take less time to transfer the payload. The data should be easy to validate as well by the formatter service, Timekeeper.
+## The system is going to be a read heavy system
+Consider the system is read heavy. The restaurant will update its opening hours less frequently, maybe once a week. 
+However, the data will be read quite frequently by some other system. Hence, the response time should be minimal. 
+We would ideally like to reduce the data size so that network calls take less time to transfer the payload. The data 
+should be easy to validate as well by the formatter service, Timekeeper.
 
-- To reduce the data size, we can remove days from the data when the restaurant is closed. The logic in Timekeeper
+### Optimization 1: Reducing the payload
+- To reduce the data size, we can remove days from the data when the restaurant is closed. The logic in Timekeeper 
   can be changed so that it is able to understand that missing days in the data means the restaurant is closed on
   that day and hence format the data accordingly.
   So, a data like this :
@@ -39,7 +40,8 @@ take less time to transfer the payload. The data should be easy to validate as w
         "friday": [{"type": "close","value": 36000}]
         }
     ```
-- We know that there can only be 2 status of a restaurant: open or close. As such, there is not much point in
+### Optimization 2: Simplifying the data structure
+- We know that there can only be 2 status of a restaurant: `open` and `close`. As such, there is not much point in
   saving the type as well into the data. Also, we can merge a pair of open close timings into just one JSON by just
   mentioning the opening time in UNIX seconds and the duration for which it will remain open in seconds. The logic in Timekeeper
   can also be changed accordingly so that it is able to format the data accordingly.
@@ -61,14 +63,4 @@ take less time to transfer the payload. The data should be easy to validate as w
   on Thursday and closes on `(64800+57600) % 86400 = 36000` UNIX seconds on Friday. This is the same as denoted
   by OPTIMIZATION 1 data.
 
-  This makes even the raw data much more readable and concise. Furthermore, if this data needs to be saved in a
-  relational DB like Postgres or MySQL, the data can be saved in just one table with 4 columns.
-
-  | restaurant_id | day           | opening_time   | duration |
-    |:------------|:------------- |:-------------- |:-----    |
-  | 123         | tuesday       | 3600           | 14400    |
-  | 123         | tuesday       | 40000          | 40000    |
-  | 123         | wednesday     | 1800           | 16200    |
-  | 123         | wednesday     | 30000          | 50000    |
-  | 123         | thursday      | 64800          | 57600    |
-
+  This makes even the raw data much more readable and concise.
