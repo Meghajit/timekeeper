@@ -40,6 +40,7 @@ This will start the server at localhost:8080
 ## Tech Stack
 
 The service is built using only Kotlin with SpringBoot. Apart from the starter libraries provided by [SpringBoot Initializer](https://start.spring.io/), there are no dependencies on third party frameworks or services.
+Unit tests have been written with good code coverage.
 
 ## Tech Notes
 
