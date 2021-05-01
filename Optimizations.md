@@ -62,13 +62,13 @@ Consider, this is the initial data we have
   on Thursday and closes on `(64800+57600) % 86400 = 36000` UNIX seconds on Friday. This is the same as denoted
   by the initial data.  
   
-### Optimization 3: Ease of parsing and reduce duplication
+### Optimization 3: Ease of parsing
 - While writing the Timekeeper service, I had to write a good amount of code in order to convert the request into an
   iterable form. The reason for this is that the input JSON has days of the week as top level keys which makes it
   difficult to walk through the keys, unless we do some messy stuff using Reflection and casting to a `DayOfWeek` enum.  
     
-  In order to ease the parsing logic and applying of validation checks by Timekeeper, the input JSON can be changed to
-  a format like this:-
+  In order to ease the parsing logic and applying of validation checks by Timekeeper, the data from `Optimization 2` 
+  above can be changed to a format like this:-
   ```json
      {"data": [{
                 "day": "tuesday",
