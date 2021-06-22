@@ -1,6 +1,7 @@
 package com.megh.timekeeper.api
 
 import com.megh.timekeeper.domain.RestaurantTimingsValidator
+import com.megh.timekeeper.instrumentation.MetricRegistry
 import com.megh.timekeeper.service.FormattedRestaurantTimings
 import com.megh.timekeeper.service.RestaurantTimingsFormatter
 import org.springframework.http.HttpStatus
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class RestaurantTimingsController(
     private val restaurantTimingsValidator: RestaurantTimingsValidator,
-    private val restaurantTimingsFormatter: RestaurantTimingsFormatter
+    private val restaurantTimingsFormatter: RestaurantTimingsFormatter,
+    private val metricRegistry: MetricRegistry
 ) {
 
     @PostMapping("/v1/timings/format", produces = [APPLICATION_JSON_VALUE])
     fun postTimings(@RequestBody restaurantTimings: RestaurantTimings): ResponseEntity<FormattedRestaurantTimings> {
+        metricRegistry.formatRequestCounter.increment()
         restaurantTimingsValidator.validate(restaurantTimings)
         return ResponseEntity(restaurantTimingsFormatter.format(restaurantTimings), HttpStatus.OK)
     }
